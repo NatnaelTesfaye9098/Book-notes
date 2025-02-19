@@ -1,0 +1,30 @@
+body{
+    width: 70%;
+    height: 100vh;
+    position: relative;
+    left: 50%;
+    transform: translate(-50%);
+    margin: 0px;
+}
+
+.hero{
+    height: 100px;
+    text-align: justify;
+    text-align-last: center;
+    margin-block: 50px;
+}
+
+.hero h1{
+    text-align: center;
+}
+
+.container{
+    display: flex;
+    flex-direction : column;
+    justify-content: space-around;
+}
+
+.container img{
+    float: left;
+    margin: 10px;
+}

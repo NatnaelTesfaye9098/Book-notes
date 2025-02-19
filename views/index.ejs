@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Notes</title>
+    <link rel="stylesheet" href="/styles/main.css">
+</head>
+<body>
+    <div class="hero">
+        <h1>Books Review</h1>
+        <p>Books have a way of pulling you into different worlds. Some stay with you, some don’t. Here, I share my thoughts on different books—what stood out, what didn’t, and whether they’re worth your time.</p>
+    </div>
+
+    <div class="container">
+        <% posts.forEach((post)=> {%>
+        <div class="card" id="<%= post.id%>">
+            <img src="/images/cat.jpg" alt="cat image" height="100px" width="100px">
+            <h3><%= post.title></h3>
+            <small><%= post.date></small>
+            <small>Rating: <%= post.rate%>/10</small>
+            <hr/>
+            <p><%= post.intro</p>
+            <p><a href="/notes/:<%=post.id %>">Read notes</a></p>
+        </div>
+        <div class="card" id="second">
+            <img src="/images/cat.jpg" alt="cat image" height="100px" width="100px">
+            <h3>Title 2</h3>
+            <small>Nov. 5, 2024</small>
+            <hr/>
+            <p>Life moves fast, but the little moments matter the most. A good conversation, a quiet walk, or even a favorite song can make a day better. Sometimes, it’s the simplest things that stick with us the longest.</p>
+        </div>
+    </div>
+</body>
+</html>
