@@ -37,13 +37,13 @@ app.get("/notes/:id", async(req, res)=>{
     res.render("note.ejs", {postIntro, postNote, postTitle});
 });
 
-app.get("/new", (req, res)=>{
-    res.render("new.ejs", {editPost: null});
-});
+// app.get("/new", (req, res)=>{
+//     res.render("new.ejs", {editPost: null});
+// });
 
-app.post("/submit", async(req, res)=>{
-    const newPost = 
-});
+// app.post("/submit", async(req, res)=>{
+//     const newPost = 
+// });
 
 app.listen(port, ()=>{
     console.log(`Server running on port ${port}`)
