@@ -4,23 +4,26 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>new Post</title>
+    <link rel="stylesheet" href="./styles/new.css"/>
 </head>
 <body>
-    <form action="<% if (editPost) { %>/update/<%= editPost.id %><% } else { %>/submit<% } %>" method="POST">
-        <label for="title">Title:</label>
-        <input type="text" name="title" value="<%= editPost && editPost.title ? editPost.title : '' %>">
-
-        <label for="date">Date:</label>
-        <
-    
-        <label for="intro">Introduction Paragraph:</label>
-        <textarea name="intro" id="intro" rows="3" required><%= editPost && editPost.intro ? editPost.intro : '' %></textarea>
-
-        <label for="note">My notes:</label>
-        <textarea name="note" id="note" rows="5" required><%= editPost && editPost.note ? editPost.note : '' %></textarea>
-    
-        <input type="submit" value="<%= editPost ? 'Update' : 'Post' %>">
-        <input type="hidden" name="postId" value="<%= editPost && editPost.id ? editPost.id : '' %>">
-      </form>
+        <form action="<%= editPost ? `/update/${editPost.id}` : '/submit' %>" method="POST">
+            <label for="title">Title:</label>
+            <input type="text" name="title" value="<%= editPost && editPost.title %>" required>
+        
+            <label for="date">Date:</label>
+            <input type="date" name="date" value="<%= editPost && editPost.date %>">
+        
+            <label for="rating">Rating:</label>
+            <input type="number" min="0" max="10" name="rating" placeholder="enter a number" value="<%= editPost && editPost.rating %>">
+        
+            <label for="intro">Introduction Paragraph:</label>
+            <textarea name="intro" id="intro" rows="3" required><%= editPost && editPost.intro %></textarea>
+        
+            <label for="note">My notes:</label>
+            <textarea name="note" id="note" rows="5" required><%= editPost && editPost.mynotes %></textarea>
+        
+            <input type="submit" value="<%= editPost ? 'Update' : 'Post' %>">
+        </form>    
 </body>
 </html>

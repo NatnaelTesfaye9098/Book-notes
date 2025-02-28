@@ -27,23 +27,49 @@ app.get("/", async(req, res)=>{
 });
 
 app.get("/notes/:id", async(req, res)=>{
-    const id = req.params.id;
-    const foundPost = await db.query("SELECT intro, mynotes FROM notes WHERE id = $1", [id]);
+    const id = parseInt(req.params.id);
+    const foundPost = await db.query("SELECT * FROM notes WHERE id = $1", [id]);
+    const post = foundPost.rows[0];
 
-    const postIntro = foundPost.rows[0].intro;
-    const postNote = foundPost.rows[0].mynotes;
-    const postTitle = foundPost.rows[0].title;
-
-    res.render("note.ejs", {postIntro, postNote, postTitle});
+    res.render("note.ejs", {post});
 });
 
-// app.get("/new", (req, res)=>{
-//     res.render("new.ejs", {editPost: null});
-// });
+app.get("/new", (req, res)=>{
+    res.render("new.ejs", {editPost: null});
+});
 
-// app.post("/submit", async(req, res)=>{
-//     const newPost = 
-// });
+app.post("/submit", async(req, res)=>{
+
+    const {title, date, rating, intro, note} = req.body;
+
+    await db.query("INSERT INTO notes(title, date, rating, intro, mynotes) VALUES($1, $2, $3, $4, $5)", [title, date, rating, intro, note]);
+
+    res.redirect("/");
+});
+
+app.get("/edit/:id", async(req, res)=>{
+    console.log(req.params.id);
+
+    const result = await db.query("SELECT * FROM notes WHERE id=$1", [req.params.id]);
+    const data = result.rows[0];
+
+    res.render("new.ejs", {editPost: data});
+});
+
+app.post("/update/:id", async(req,res)=>{
+    const id = parseInt(req.params.id);
+
+    const {title, date, rating, intro, note} = req.body;
+
+    try{
+        const result = await db.query("UPDATE notes SET title=$1, date=$2, rating=$3, intro=$4, notes=$5, WHERE id=$6", [title, date, rating, intro, note, id]);
+        console.log(result.rows[0]);
+    
+        res.redirect("/");
+    }catch(err){
+        console.log(err);
+    }
+});
 
 app.listen(port, ()=>{
     console.log(`Server running on port ${port}`)

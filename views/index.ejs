@@ -11,7 +11,7 @@
     <div class="nav-bar">
         <h2>Book notes</h2>
             <ul>
-                <li><a href="/new">New note</a></li>
+                <li><a href="/new">New Note</a></li>
                 <li><a href="/about"></a>About</a></li>
             </ul>
     </div>
@@ -21,7 +21,7 @@
     </div>
 
     <div class="container">
-        <% posts.forEach((post)=> {%>
+        <% posts.forEach(post=> {%>
         <div class="card" id="<%= post.id%>">
             <img src="/images/cat.jpg" alt="cat image" height="100px" width="100px">
             <h3><%= post.title%></h3>
@@ -29,7 +29,7 @@
             <small>Rating: <%= post.rating%>/10</small>
             <hr/>
             <p><%= post.intro%></p>
-            <p><a href="/notes/:<%=post.id %>">Read notes</a></p>
+            <p><a href="/notes/<%=post.id %>">Read notes</a></p>
         </div>
         <%})%>
     </div>
