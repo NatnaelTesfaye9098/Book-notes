@@ -8,13 +8,7 @@
     <link rel="stylesheet" href="/styles/main.css">
 </head>
 <body>
-    <div class="nav-bar">
-        <h2>Book notes</h2>
-            <ul>
-                <li><a href="/new">New Note</a></li>
-                <li><a href="/about"></a>About</a></li>
-            </ul>
-    </div>
+    <%- include("./Partials/header.ejs")%>
     <div class="hero">
         <h1>Books Review</h1>
         <p>Books have a way of pulling you into different worlds. Some stay with you, some don’t. Here, I share my thoughts on different books—what stood out, what didn’t, and whether they’re worth your time.</p>
@@ -25,8 +19,8 @@
         <div class="card" id="<%= post.id%>">
             <img src="/images/cat.jpg" alt="cat image" height="100px" width="100px">
             <h3><%= post.title%></h3>
-            <small><%= post.date%></small>
-            <small>Rating: <%= post.rating%>/10</small>
+            <p><%= post.date%></p>
+            <p>Rating: <%= post.rating%>/10</p>
             <hr/>
             <p><%= post.intro%></p>
             <p><a href="/notes/<%=post.id %>">Read notes</a></p>

@@ -40,9 +40,11 @@ app.get("/new", (req, res)=>{
 
 app.post("/submit", async(req, res)=>{
 
-    const {title, date, rating, intro, note} = req.body;
+    const {title, rating, intro, note} = req.body;
+    const date = new Date();
+    const newDate = date.toDateString()
 
-    await db.query("INSERT INTO notes(title, date, rating, intro, mynotes) VALUES($1, $2, $3, $4, $5)", [title, date, rating, intro, note]);
+    await db.query("INSERT INTO notes(title, date, rating, intro, mynotes) VALUES($1, $2, $3, $4, $5)", [title, newDate, rating, intro, note]);
 
     res.redirect("/");
 });
