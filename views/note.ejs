@@ -11,12 +11,13 @@
     <div class="container">
             <img src="/images/cat.jpg" alt="cat image" height="100px" width="100px">
             <h3><%= post.title%></h3>
-            <small><%= post.date%></small>
-            <small>Rating: <%= post.rating%>/10</small>
+            <p><%= post.date%></p>
+            <p>Rating: <%= post.rating%>/10</p>
             <hr/>
             <p><%= post.intro%></p>
             <p><%= post.mynotes%></p>
-            <p><a href="/edit/<%=post.id %>">Edit</a></p>
+            <br>
+            <a href="/edit/<%=post.id %>">Edit</a>
     </div>
 </body>
 </html>
