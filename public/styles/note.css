@@ -1,8 +1,33 @@
+body{
+    background-color: #FAF3E0;
+}
+
 .container{
-    width: 80%;
-    height: 80%;
+    width: 70%;
+    height: 100vh;
     position: relative;
-    top: 50%;
     left: 50%;
-    transform: translate(-50%, -50%);
+    transform: translateX(-50%);
+    margin-top: 50px;
+}
+
+.intro img{
+    float: left;
+    border-radius: 20px;
+    margin-right: 30px;
+
+}
+
+.container button{
+    height: 35px;
+    width: 70px;
+    text-decoration: none;
+    background-color: #8B4513;
+    border-radius: 20px;
+    border: 0;
+    color: #FAF3E0 ;
+}
+
+button:hover{
+    background-color: #836046;
 }

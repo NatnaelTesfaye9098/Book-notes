@@ -9,15 +9,21 @@
 </head>
 <body>
     <div class="container">
+        <div class="intro">
             <img src="/images/cat.jpg" alt="cat image" height="100px" width="100px">
-            <h3><%= post.title%></h3>
+            <h2><%= post.title%></h2>
             <p><%= post.date%></p>
             <p>Rating: <%= post.rating%>/10</p>
-            <hr/>
+        </div>            
+        <hr/>
+        <div class="details">
+            <p>Introduction Paragraph</p>
             <p><%= post.intro%></p>
+            <p>My notes</p>
             <p><%= post.mynotes%></p>
             <br>
-            <a href="/edit/<%=post.id %>">Edit</a>
+            <a href="/edit/<%=post.id %>"><button>Edit</button></a>
+        </div>
     </div>
 </body>
 </html>
