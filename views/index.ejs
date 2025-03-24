@@ -17,10 +17,12 @@
     <div class="container">
         <% posts.forEach(post=> {%>
         <div class="card" id="<%= post.id%>">
-            <img src="/images/cat.jpg" alt="cat image" height="100px" width="100px">
-            <h3><%= post.title%></h3>
-            <p><%= post.date%></p>
-            <p>Rating: <%= post.rating%>/10</p>
+            <div class="intro">
+                <img src="/images/cat.jpg" alt="cat image" height="100px" width="100px">
+                <h3><%= post.title%></h3>
+                <p><%= post.date%></p>
+                <p>Rating: <%= post.rating%>/10</p>
+            </div>
             <hr/>
             <p><%= post.intro%></p>
             <p><a href="/notes/<%=post.id %>">Read notes</a></p>

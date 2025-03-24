@@ -27,8 +27,7 @@ app.get("/", async(req, res)=>{
 });
 
 app.get("/notes/:id", async(req, res)=>{
-    const id = parseInt(req.params.id, 10);
-    const foundPost = await db.query("SELECT * FROM notes WHERE id = $1", [id]);
+    const foundPost = await db.query("SELECT * FROM notes WHERE id = $1", [req.params.id]);
     const post = foundPost.rows[0];
 
     res.render("note.ejs", {post});
@@ -51,7 +50,6 @@ app.post("/submit", async(req, res)=>{
 
 app.get("/edit/:id", async(req, res)=>{
     const id = parseInt(req.params.id);
-
     const result = await db.query("SELECT * FROM notes WHERE id=$1", [id]);
     const data = result.rows[0];
 
@@ -64,8 +62,8 @@ app.post("/update/:id", async(req,res)=>{
     const {title, date, rating, intro, note} = req.body;
 
     try{
-        const result = await db.query("UPDATE notes SET title=$1, date=$2, rating=$3, intro=$4, notes=$5, WHERE id=$6", [title, date, rating, intro, note, id]);
-        console.log(result.rows[0]);
+        const result = await db.query("UPDATE notes SET title=$1, date=$2, rating=$3, intro=$4, notes=$5 WHERE id=$6", [title, date, rating, intro, note, id]);
+        console.log(result.rowCount);
     
         res.redirect("/");
     }catch(err){
