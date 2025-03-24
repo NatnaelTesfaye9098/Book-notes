@@ -16,12 +16,15 @@
         </div>            
         <hr/>
         <div class="details">
-            <p>Introduction Paragraph</p>
+            <h4>Introduction Paragraph</h4>
             <p><%= post.intro%></p>
-            <p>My notes</p>
+            <h4>My notes</h4>
             <p><%= post.mynotes%></p>
             <br>
-            <a href="/edit/<%=post.id %>"><button>Edit</button></a>
+            <div class="buttons">
+                <a href="/edit/<%=post.id %>"><button>Edit</button></a>
+                <a href="/Delete/<%=post.id %>"><button>Delete</button></a>
+            </div>
         </div>
     </div>
 </body>

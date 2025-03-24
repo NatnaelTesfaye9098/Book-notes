@@ -56,13 +56,22 @@ app.get("/edit/:id", async(req, res)=>{
     res.render("new.ejs", {editPost: data});
 });
 
+app.post("/delete/:id",  async(req, res)=>{
+    const result = await db.query("DELETE from notes where id = $1", [req.params.id]);
+    const data = result.rows;
+
+    res.redirect("/");
+})
+
 app.post("/update/:id", async(req,res)=>{
     const id = parseInt(req.params.id);
 
-    const {title, date, rating, intro, note} = req.body;
+    const {title, rating, intro, note} = req.body;
+    const date = new Date();
+    const newDate = date.toDateString();
 
     try{
-        const result = await db.query("UPDATE notes SET title=$1, date=$2, rating=$3, intro=$4, notes=$5 WHERE id=$6", [title, date, rating, intro, note, id]);
+        const result = await db.query("UPDATE notes SET title=$1, rating=$2, intro=$3, mynotes=$4, date=$5 WHERE id=$6", [title, rating, intro, note, newDate, id]);
         console.log(result.rowCount);
     
         res.redirect("/");
