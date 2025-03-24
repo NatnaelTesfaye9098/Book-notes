@@ -14,6 +14,7 @@
         <p>Books have a way of pulling you into different worlds. Some stay with you, some don’t. Here, I share my thoughts on different books—what stood out, what didn’t, and whether they’re worth your time.</p>
     </div>
 
+    <% if(locals.posts.length){%>
     <div class="container">
         <% posts.forEach(post=> {%>
         <div class="card" id="<%= post.id%>">
@@ -25,9 +26,17 @@
             </div>
             <hr/>
             <p><%= post.intro%></p>
-            <p><a href="/notes/<%=post.id %>">Read notes</a></p>
+            <p><a href="/notes/<%=post.id %>">Read more..</a></p>
         </div>
         <%})%>
     </div>
+        <% }else {%>
+            <div class="empty">
+                <form action="/new">
+                    <p>No Book Reviews</p>
+                    <button>Create One</button>
+                </form>
+            </div>
+        <%}%>
 </body>
 </html>

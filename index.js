@@ -56,12 +56,19 @@ app.get("/edit/:id", async(req, res)=>{
     res.render("new.ejs", {editPost: data});
 });
 
-app.post("/delete/:id",  async(req, res)=>{
-    const result = await db.query("DELETE from notes where id = $1", [req.params.id]);
-    const data = result.rows;
+app.get("/delete/:id", async (req, res) => {
+    try {
+        const result = await db.query("DELETE FROM notes WHERE id = $1", [req.params.id]);
+        
+        if (result.rowCount === 0) {
+            return res.status(404).send("Note not found");
+        }
 
-    res.redirect("/");
-})
+        res.redirect("/");
+    } catch (err) {
+        console.error(err);
+    }
+});
 
 app.post("/update/:id", async(req,res)=>{
     const id = parseInt(req.params.id);
