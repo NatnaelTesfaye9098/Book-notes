@@ -3,6 +3,10 @@
 A simple and clean web app for storing and managing notes about your favorite books. Built using Node.js, Express, PostgreSQL, EJS for server-side rendering, and vanilla CSS for styling.
 ___________________
 
+## Try it Here
+
+👉 [**Live Demo**](https://book-notes-3.onrender.com)
+
 ## Features
 
 - Add, edit, and delete book notes
