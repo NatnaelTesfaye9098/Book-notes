@@ -107,6 +107,12 @@ app.post("/update/:id", async(req,res)=>{
     }
 });
 
-app.listen(port, ()=>{
-    console.log(`Server running on port ${port}`)
-});
+initDB()
+    .then(() => {
+        app.listen(port, () => {
+            console.log(`Server running on port ${port}`);
+        });
+    })
+    .catch((err) => {
+        console.error(err);
+    });
