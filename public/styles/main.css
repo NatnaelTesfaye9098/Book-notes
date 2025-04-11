@@ -41,6 +41,7 @@ body{
 .card p a{
     position: relative;
     color: #fff;
+    font-weight: 800;
 }
 
 .card p a::after{
