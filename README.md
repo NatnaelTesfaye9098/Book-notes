@@ -5,7 +5,7 @@ ___________________
 
 ## Try it Here
 
-👉 [**Live Demo**](https://book-notes-3.onrender.com)
+[**Live Demo**](https://book-notes-3.onrender.com)
 
 ## Features
 
