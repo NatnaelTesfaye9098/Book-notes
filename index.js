@@ -6,6 +6,25 @@ import env from "dotenv";
 
 env.config();
 
+async function initDB() {
+    try {
+        await db.query(`
+            CREATE TABLE IF NOT EXISTS notes (
+                id SERIAL PRIMARY KEY,
+                title VARCHAR(255),
+                date VARCHAR(100),
+                rating INTEGER,
+                intro TEXT,
+                mynotes TEXT
+            );
+        `);
+    } catch (err) {
+        console.error( err);
+    }
+}
+
+await initDB();
+
 const app = express();
 const port = process.env.PORT;
 
