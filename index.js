@@ -6,10 +6,22 @@ import env from "dotenv";
 
 env.config();
 
+await initDB();
+
+const app = express();
+const port = process.env.PORT;
+
+const db = new pg.Pool({
+    connectionString: process.env.DATABASE_URL,
+    ssl: {
+        rejectUnauthorized: false
+    }
+});
+
 async function initDB() {
     try {
         await db.query(`
-            CREATE TABLE IF NOT EXISTS notes (
+            CREATE TABLE notes (
                 id SERIAL PRIMARY KEY,
                 title VARCHAR(255),
                 date VARCHAR(100),
@@ -23,17 +35,6 @@ async function initDB() {
     }
 }
 
-await initDB();
-
-const app = express();
-const port = process.env.PORT;
-
-const db = new pg.Pool({
-    connectionString: process.env.DATABASE_URL,
-    ssl: {
-        rejectUnauthorized: false
-    }
-});
 
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(express.static("public"));
