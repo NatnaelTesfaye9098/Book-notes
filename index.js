@@ -9,14 +9,12 @@ env.config();
 const app = express();
 const port = process.env.PORT;
 
-const db = new pg.Client({
+const db = new pg.Pool({
     connectionString: process.env.DATABASE_URL,
     ssl: {
         rejectUnauthorized: false
     }
 });
-
-db.connect();
 
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(express.static("public"));
