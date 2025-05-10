@@ -6,8 +6,6 @@ import env from "dotenv";
 
 env.config();
 
-await initDB();
-
 const app = express();
 const port = process.env.PORT;
 
