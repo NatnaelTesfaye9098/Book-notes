@@ -1,6 +1,6 @@
 # Book Notes App
 
-A simple and clean web app for storing and managing notes about your favorite books. Built using Node.js, Express, PostgreSQL, EJS for server-side rendering, and vanilla CSS for styling.
+A simple and clean web app for storing and managing notes about your favorite books. Built using **Node.js**, **Express**, **PostgreSQL**, **EJS** for server-side rendering, and vanilla **CSS** for styling.
 ___________________
 
 ## Try it Here
@@ -12,7 +12,7 @@ ___________________
 - Add, edit, and delete book notes
 - View all book notes in a clean UI
 - Server-side rendering using EJS
-- Persistent storage with PostgreSQL
+- Persistent storage with PostgreSQL (Neon DB)
 - Responsive and minimalist CSS design
 
 ---
@@ -20,7 +20,7 @@ ___________________
 ## Tech Stack
 
 - **Backend**: Node.js + Express.js  
-- **Database**: PostgreSQL  
+- **Database**: PostgreSQL (Neon)
 - **Templating Engine**: EJS  
 - **Styling**: CSS  
 - **Others**: dotenv for environment configuration
