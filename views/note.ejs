@@ -5,14 +5,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>notes</title>
     <link rel="stylesheet" href="/styles/note.css">
+    <link rel="stylesheet" href="/styles/main.css">
 </head>
 <body>
+    <%- include("./Partials/header.ejs")%>
     <div class="container">
         <div class="intro">
             <img src="/images/oldbooks.jpg" alt="books image" height="100px" width="100px">
             <h2><%= post.title%></h2>
             <p><%= post.date%></p>
             <p>Rating: <%= post.rating%>/10</p>
+            <p>Posted by: <%= post.username %></p>
         </div>            
         <hr/>
         <div class="details">
@@ -22,8 +25,10 @@
             <p><%= post.mynotes%></p>
             <br>
             <div class="buttons">
-                <a href="/edit/<%=post.id %>"><button>Edit</button></a>
-                <a href="/delete/<%=post.id %>"><button>Delete</button></a>
+                <% if (locals.user && locals.user.id === post.user_id) { %>
+                    <a href="/edit/<%=post.id %>"><button>Edit</button></a>
+                    <a href="/delete/<%=post.id %>"><button>Delete</button></a>
+                <% } %>
             </div>
         </div>
     </div>
