@@ -3,7 +3,7 @@ import bodyParser from "body-parser";
 import pg from "pg";
 import env from "dotenv";
 import cookieParser from "cookie-parser";
-import authRoutes, { authenticateToken } from "./routes/auth.js";
+import authRoutes, { setAuthStatus, requireAuth } from "./routes/auth.js";
 
 env.config();
 
@@ -44,22 +44,16 @@ async function initDB() {
             ADD COLUMN IF NOT EXISTS user_id INTEGER REFERENCES users(id) ON DELETE CASCADE;
         `);
     } catch (err) {
-        console.error(err);
+        console.error("db error:", err);
         process.exit(1);
     }
 }
 
 app.use(cookieParser());
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(bodyParser.json({ extended: true }));
 app.use(express.static("public"));
 
-app.use((req, res, next) => {
-    if (req.path === '/login' || req.path === '/signup' || req.path === '/logout') {
-        return next();
-    }
-    authenticateToken(req, res, next);
-});
+app.use(setAuthStatus);
 
 app.use("/", authRoutes(db, JWT_SECRET));
 
@@ -88,11 +82,11 @@ app.get("/notes/:id", async (req, res) => {
     }
 });
 
-app.get("/new", authenticateToken, (req, res) => {
+app.get("/new", requireAuth, (req, res) => {
     res.render("new.ejs", { editPost: null });
 });
 
-app.post("/submit", authenticateToken, async (req, res) => {
+app.post("/submit", requireAuth, async (req, res) => {
     const { title, rating, intro, note } = req.body;
     const date = new Date();
     const newDate = date.toDateString();
@@ -110,7 +104,7 @@ app.post("/submit", authenticateToken, async (req, res) => {
     }
 });
 
-app.get("/edit/:id", authenticateToken, async (req, res) => {
+app.get("/edit/:id", requireAuth, async (req, res) => {
     const id = parseInt(req.params.id);
     const userId = req.user.id;
 
@@ -127,7 +121,7 @@ app.get("/edit/:id", authenticateToken, async (req, res) => {
     }
 });
 
-app.post("/update/:id", authenticateToken, async (req, res) => {
+app.post("/update/:id", requireAuth, async (req, res) => {
     const id = parseInt(req.params.id);
     const { title, rating, intro, note } = req.body;
     const date = new Date();
@@ -149,7 +143,7 @@ app.post("/update/:id", authenticateToken, async (req, res) => {
     }
 });
 
-app.get("/delete/:id", authenticateToken, async (req, res) => {
+app.get("/delete/:id", requireAuth, async (req, res) => {
     try {
         const postId = parseInt(req.params.id);
         const userId = req.user.id;

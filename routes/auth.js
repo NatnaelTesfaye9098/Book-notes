@@ -4,6 +4,43 @@ import jwt from "jsonwebtoken";
 
 const router = express.Router();
 
+export const setAuthStatus = (req, res, next) => {
+    const token = req.cookies.token;
+
+    if (!token || req.path === '/login' || req.path === '/signup' || req.path === '/logout') {
+        req.user = undefined;
+        return next();
+    }
+
+    jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
+        if (err) {
+            res.clearCookie('token');
+            req.user = undefined;
+        } else {
+            req.user = user;
+        }
+        next();
+    });
+};
+
+export const requireAuth = (req, res, next) => {
+    const token = req.cookies.token;
+
+    if (!token) {
+        return res.redirect("/login");
+    }
+
+    jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
+        if (err) {
+            res.clearCookie('token');
+            return res.redirect("/login");
+        }
+        req.user = user;
+        next();
+    });
+};
+
+
 export default function setupAuthRoutes(db, JWT_SECRET) {
 
     router.get("/login", (req, res) => {
@@ -29,8 +66,8 @@ export default function setupAuthRoutes(db, JWT_SECRET) {
             res.redirect("/");
 
         } catch (err) {
-            console.error("login error: ", err);
-            res.status(500).send("Login Error");
+            console.error("Error during login:", err);
+            res.status(500).send("Error logging in.");
         }
     });
 
@@ -58,8 +95,8 @@ export default function setupAuthRoutes(db, JWT_SECRET) {
             res.redirect("/");
 
         } catch (err) {
-            console.error("signup error: ", err);
-            res.status(500).send("SignUp Error");
+            console.error("Error during signup:", err);
+            res.status(500).send("Error signing up.");
         }
     });
 
@@ -70,24 +107,3 @@ export default function setupAuthRoutes(db, JWT_SECRET) {
 
     return router;
 }
-
-export const authenticateToken = (req, res, next) => {
-    const token = req.cookies.token;
-
-    if (!token && req.path !== '/login' && req.path !== '/signup') {
-        return res.redirect("/login");
-    }
-
-    if (!token) {
-        return next();
-    }
-
-    jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
-        if (err) {
-            res.clearCookie('token');
-            return res.redirect("/login");
-        }
-        req.user = user;
-        next();
-    });
-};
