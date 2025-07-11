@@ -2,10 +2,8 @@ import express from "express";
 import bodyParser from "body-parser";
 import pg from "pg";
 import env from "dotenv";
-import session from "express-session";
 import cookieParser from "cookie-parser";
-import passport from "passport";
-import setupAuthRoutes, { authenticateToken } from "./routes/auth.js";
+import authRoutes, { authenticateToken } from "./routes/auth.js";
 
 env.config();
 
@@ -20,7 +18,6 @@ const db = new pg.Pool({
 });
 
 const JWT_SECRET = process.env.JWT_SECRET;
-const SESSION_SECRET = process.env.SESSION_SECRET;
 
 async function initDB() {
     try {
@@ -47,28 +44,24 @@ async function initDB() {
             ADD COLUMN IF NOT EXISTS user_id INTEGER REFERENCES users(id) ON DELETE CASCADE;
         `);
     } catch (err) {
-        console.error("Error initializing database schema:", err);
+        console.error(err);
         process.exit(1);
     }
 }
 
-app.use(session({
-    secret: SESSION_SECRET,
-    resave: false,
-    saveUninitialized: false,
-    cookie: {
-        maxAge: 1000 * 60 * 60 * 24,
-        httpOnly: true,
-        secure: process.env.NODE_ENV === 'production'
-    }
-}));
 app.use(cookieParser());
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json({ extended: true }));
 app.use(express.static("public"));
-app.use(passport.initialize());
-app.use(passport.session());
 
-app.use("/", setupAuthRoutes(db, JWT_SECRET, SESSION_SECRET));
+app.use((req, res, next) => {
+    if (req.path === '/login' || req.path === '/signup' || req.path === '/logout') {
+        return next();
+    }
+    authenticateToken(req, res, next);
+});
+
+app.use("/", authRoutes(db, JWT_SECRET));
 
 app.get("/", async (req, res) => {
     try {

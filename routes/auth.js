@@ -1,59 +1,37 @@
 import express from "express";
 import bcrypt from "bcrypt";
-import passport from "passport";
-import { Strategy as LocalStrategy } from "passport-local";
 import jwt from "jsonwebtoken";
 
 const router = express.Router();
 
-export default function setupAuthRoutes(db, JWT_SECRET, SESSION_SECRET) {
-
-    passport.use(new LocalStrategy(async function verify(username, password, cb) {
-        try {
-            const result = await db.query("SELECT * FROM users WHERE username = $1", [username]);
-            if (result.rows.length === 0) {
-                return cb(null, false, { message: "Incorrect username or password." });
-            }
-
-            const user = result.rows[0];
-            const match = await bcrypt.compare(password, user.password);
-            if (!match) {
-                return cb(null, false, { message: "Incorrect username or password." });
-            }
-
-            return cb(null, user);
-        } catch (err) {
-            return cb(err);
-        }
-    }));
-
-    passport.serializeUser((user, cb) => {
-        cb(null, user.id);
-    });
-
-    passport.deserializeUser(async (id, cb) => {
-        try {
-            const result = await db.query("SELECT id, username FROM users WHERE id = $1", [id]);
-            if (result.rows.length === 0) {
-                return cb(new Error("User not found"));
-            }
-            cb(null, result.rows[0]);
-        } catch (err) {
-            cb(err);
-        }
-    });
+export default function setupAuthRoutes(db, JWT_SECRET) {
 
     router.get("/login", (req, res) => {
         res.render("login.ejs");
     });
 
-    router.post("/login", passport.authenticate("local", {
-        failureRedirect: "/login",
-        failureFlash: true
-    }), (req, res) => {
-        const token = jwt.sign({ id: req.user.id, username: req.user.username }, JWT_SECRET, { expiresIn: '1h' });
-        res.cookie('token', token, { httpOnly: true, secure: process.env.NODE_ENV === 'production' });
-        res.redirect("/");
+    router.post("/login", async (req, res) => {
+        const { username, password } = req.body;
+        try {
+            const result = await db.query("SELECT * FROM users WHERE username = $1", [username]);
+            if (result.rows.length === 0) {
+                return res.render("login.ejs", { error: "Incorrect username or password." });
+            }
+
+            const user = result.rows[0];
+            const match = await bcrypt.compare(password, user.password);
+            if (!match) {
+                return res.render("login.ejs", { error: "Incorrect username or password." });
+            }
+
+            const token = jwt.sign({ id: user.id, username: user.username }, JWT_SECRET, { expiresIn: '1h' });
+            res.cookie('token', token, { httpOnly: true, secure: process.env.NODE_ENV === 'production', maxAge: 3600000 });
+            res.redirect("/");
+
+        } catch (err) {
+            console.error("login error: ", err);
+            res.status(500).send("Login Error");
+        }
     });
 
     router.get("/signup", (req, res) => {
@@ -75,31 +53,19 @@ export default function setupAuthRoutes(db, JWT_SECRET, SESSION_SECRET) {
                 [username, hashedPassword]
             );
 
-            req.login(newUser.rows[0], (err) => {
-                if (err) {
-                    console.error("Error auto-logging in after signup:", err);
-                    return res.redirect("/login");
-                }
-                const token = jwt.sign({ id: newUser.rows[0].id, username: newUser.rows[0].username }, JWT_SECRET, { expiresIn: '1h' });
-                res.cookie('token', token, { httpOnly: true, secure: process.env.NODE_ENV === 'production' });
-                res.redirect("/");
-            });
+            const token = jwt.sign({ id: newUser.rows[0].id, username: newUser.rows[0].username }, JWT_SECRET, { expiresIn: '1h' });
+            res.cookie('token', token, { httpOnly: true, secure: process.env.NODE_ENV === 'production', maxAge: 3600000 });
+            res.redirect("/");
 
         } catch (err) {
-            console.error("Error during signup:", err);
-            res.status(500).send("Error signing up.");
+            console.error("signup error: ", err);
+            res.status(500).send("SignUp Error");
         }
     });
 
     router.get("/logout", (req, res) => {
-        req.logout((err) => {
-            if (err) {
-                console.error("Error logging out:", err);
-                return res.status(500).send("Error logging out.");
-            }
-            res.clearCookie('token');
-            res.redirect("/login");
-        });
+        res.clearCookie('token');
+        res.redirect("/login");
     });
 
     return router;
@@ -107,11 +73,16 @@ export default function setupAuthRoutes(db, JWT_SECRET, SESSION_SECRET) {
 
 export const authenticateToken = (req, res, next) => {
     const token = req.cookies.token;
-    if (!token) {
+
+    if (!token && req.path !== '/login' && req.path !== '/signup') {
         return res.redirect("/login");
     }
 
-    jwt.verify(token, process.env.JWT_SECRET || "aVeryStrongAndRandomJWTSecretKeyPleaseChangeThisInEnv", (err, user) => {
+    if (!token) {
+        return next();
+    }
+
+    jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
         if (err) {
             res.clearCookie('token');
             return res.redirect("/login");
