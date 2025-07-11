@@ -14,6 +14,8 @@ ___________________
 - Server-side rendering using EJS
 - Persistent storage with PostgreSQL (Neon DB)
 - Responsive and minimalist CSS design
+- User authentication and password handling
+- Personalized note management (users can only edit/delete their own notes)
 
 ---
 
@@ -23,6 +25,7 @@ ___________________
 - **Database**: PostgreSQL (Neon)
 - **Templating Engine**: EJS  
 - **Styling**: CSS  
+- **Authentication**: bcrypt, JWT
 - **Others**: dotenv for environment configuration
 
 
