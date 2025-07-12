@@ -83,7 +83,7 @@ app.get("/notes/:id", async (req, res) => {
 });
 
 app.get("/new", requireAuth, (req, res) => {
-    res.render("new.ejs", { editPost: null });
+    res.render("new.ejs", { editPost: null, user: req.user });
 });
 
 app.post("/submit", requireAuth, async (req, res) => {
@@ -114,7 +114,7 @@ app.get("/edit/:id", requireAuth, async (req, res) => {
             return res.status(403).send("You are not authorized to edit this post or post not found.");
         }
         const data = result.rows[0];
-        res.render("new.ejs", { editPost: data });
+        res.render("new.ejs", { editPost: data, user: req.user});
     } catch (err) {
         console.error("Error fetching post for edit:", err);
         res.status(500).send("Error fetching post for edit.");
