@@ -19,6 +19,7 @@ body{
     float: left;
     border-radius: 20px;
     margin-right: 30px;
+    margin-bottom: 20px;
 }
 
 .buttons button{
@@ -47,5 +48,6 @@ button:hover{
     text-align: justify;
 
 }
+
 
 
