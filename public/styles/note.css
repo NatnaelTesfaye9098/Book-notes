@@ -10,10 +10,10 @@ body{
     transform: translateX(-50%);
     margin-top: 50px;
 }
-
+/* 
 #rating{
     margin-block: 10px;
-}
+} */
 
 .intro img{
     float: left;
